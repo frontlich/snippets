@@ -1,0 +1,2 @@
+- 对于onKeyPress, keyCode属性获取值为0，charCode属性有值
+- 对于onKeyDown和onKeyUp, keyCode属性有值，charCode获取值为0

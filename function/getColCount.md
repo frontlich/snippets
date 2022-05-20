@@ -12,34 +12,21 @@
  * @returns 列数
  */
 const getColCount = (n: number, minCol: number, maxCol: number, maxRow?: number): number => {
-  // 如果金刚位个数 > 最大列数乘以最大行数
   if (maxRow && n >= maxCol * maxRow) return maxCol;
 
-  let min = maxCol, // 距离满排的最小差值
-    col = 0; // 满排时的列数
-  const loop = (mod: number) => {
-    const rest = n % mod; // 当前列数对应的余数
-
-    if (maxRow) {
-      // 当前列数对应的最大行数
-      const rows = Math.ceil(n / mod);
-      // 如果超过最大行数
-      if (rows > maxRow) return;
+  let lack = maxCol, // 距离满排的最小差值
+    col = 0;
+  for (let i = maxCol; i >= minCol; i--) {
+    const mod = n % i; // 当前列数对应的余数
+    const curLack = mod ? i - mod : 0; // 当前距离满排的差值
+    if ((!maxRow || Math.ceil(n / i) <= maxRow) && curLack < lack) { // 获取最小差值对应的col
+      col = i;
+      lack = curLack;
+      if (lack === 0) break; // 当差值为0时，可终止循环
     }
+  }
 
-    if (rest === 0) { // 满排
-      col = mod;
-      return;
-    }
-
-    min = Math.min(min, mod - rest); // 记录最小差值
-
-    mod - 1 >= minCol && loop(mod - 1);
-  };
-
-  loop(maxCol);
-
-  return col || getColCount(n + min, minCol, maxCol, maxRow);
+  return col;
 };
 
 ```
